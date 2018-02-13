@@ -33,171 +33,155 @@
 
 <body>
 
-<!--Top Arrow start-->
-<a href="javascript:" id="return-to-top">
-	<i class="fa fa-chevron-up" aria-hidden="true"></i>
-</a>
-<!--Top Arrow end-->
+	<!--Top Arrow start-->
+	<a href="javascript:" id="return-to-top">
+		<i class="fa fa-chevron-up" aria-hidden="true"></i>
+	</a>
+	<!--Top Arrow end-->
 
-<div id="my-header">
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<div class="menu-m-b hidden-lg-only">
-					<a href="#my-menu" class="hamburger hamburger--squeeze js-hamburger" type="button" id="menu-btn">
-		          <span class="hamburger-box">
-		              <span class="hamburger-inner"></span>
-		          </span>
-					</a>
-					<nav id="my-menu">
-					</nav>
-				</div>
-			</div>
-			<div class="col hidden-md-down">
-				<div class="main-menu">
-					<ul>
-						<li data-trigger="#vaka" ><a href="javascript:void(0)">
-							Вакансии
-						</a></li>
-						<li data-trigger="#slider-object"><a href="javascript:void(0)">
-							Объекты строительства
-						</a></li>
-						<li data-trigger="#about-company"><a href="javascript:void(0)">
-							О компании
-						</a>
-						</li>
-						<li data-trigger="#employer"><a href="javascript:void(0)">
-							Гарантии
-						</a></li>
-						<li data-trigger="#feedback"><a href="javascript:void(0)">
-							Отзывы
-						</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+	<div id="my-header">
+		 <div class="container">
+			 <div class="row">
+				 <div class="col d-flex justify-content-center">
+					 <div class="h1 ">
+						 Header
+					 </div>
+				 </div>
+			 </div>
+		 </div>
 	</div>
 
-</div>
-<div id="my-content" class="main-page">
-	<div class="container">
-		<div class="row">
-			<div class="col-12 ">
-				<div class="h1">
-					BootstrapV4
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">col1</div>
-			<div class="col">col1</div>
-			<div class="col">col1</div>
-			<div class="col">col1</div>
-			<div class="col">col1</div>
-		</div>
-		<div class="row">
-			<div class="col content">
-				<div class="h1">
-					AIR DATEPICKER
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<input type='text' data-timepicker="true" class="datepicker-here" data-position="right top" />
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-12">
-				<div class="h1">Slick Slider</div>
-			</div>
-			<div class="col-12">
-				<div class="main-slider">
-					<div class="item">
-						<div class="prev" style="background-image: url('img/slider.jpg')">
-						</div>
-						<div class="content-c">
-							Мостовой переход через <br>
-							реку Чусовую в Перми
-						</div>
-					</div>
-					<div class="item">
-						<div class="prev" style="background-image: url('img/slider2.jpg')">
-						</div>
-						<div class="content-c">
-							Мостовой переход через <br>
-							реку Чусовую в Перми
-						</div>
-					</div>
-					<div class="item">
-						<div class="prev" style="background-image: url('img/slider3.jpg')">
-						</div>
-						<div class="content-c">
-							Мостовой переход через <br>
-							реку Чусовую в Перми
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</div>
-
-</div>
-
-<div id="my-footer">
-
-</div>
-
-
-<!--Modal for all pages start-->
-<div data-fancybox="" data-src="#consult">
-	<div id="consult" class="" style="display: none">
-		<div class="container ">
+	<div id="my-content" class="main-page">
+		<div class="container" id="infoProd">
 			<div class="row">
 				<div class="col-12 ">
-					<!--start callback_form-->
-					<p>
-						<b>Привет, Мы Marketminer!</b> <br>
-						Мы здесь что бы помочь Вам с реализацией и развитием Вашего проекта! Оставьте свои контактные данные и мы свяжемся с вами.
-					</p>
-					<form >
-						<input type="hidden" name="theme" value="Заявка на обратный звонок на странице Главная">
-						<label for="name">Как вас зовут?</label>
-						<input type="text" id="name" name="name">
+					<div class="h1">
+						Калькулятор стоимости
+					</div>
+					<multiselect v-model="formTriggers.productSelect" Placeholder="Выберите продукт" Select-Label="Нажмите для выбора" Deselect-Label="Нажмите для удаления"   Selected-Label="Выбран" label="name" :multiple="true" :options="infoProdTableArr.table1.headersArr"></multiselect>
 
-						<label for="phone">Ваш контактный номер?</label>
-						<input type="tel" id="phone" name="phone">
+					<button type="button" class="btn btn-success">Показать</button>
 
-						<label for="callDate">Удобное дата и время для звонка (по Москве)</label>
-						<input type="text" id="callDate" name="callDate" class="datepick">
 
-						<label for="callDate">Ваш контактный E-mail</label>
-						<input type="email" name="email">
 
-						<p style="font-size: 12px">
-							Нажимая "Отправить", Я подтверждаю, что ознакомлен с <a href="" target="_blank">политикой конфиденциальности</a> и даю согласие на обработку своих персональных данных.
-						</p>
-						<button type="" name="callback_form" class="btn-accent" value="Заказать">Отправить</button>
-					</form>
-					<!--start callback_form-->
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table">
+						<table id="datatable-responsive" cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+							<thead>
+								<tr>
+									<template v-for="(item, index) in infoProdTableArr.table1.headersArr">
+										<th>
+											{{ item }}
+										</th>
+									</template>
+								</tr>
+							</thead>
+							<tbody>
+								<template v-for="(rowTable, index) in infoProdTableArr.table1.rowValArr">
+										<tr>
+												<td>
+													{{ rowTable.name }}
+												</td>
+												<td>
+													{{ rowTable.price }}
+												</td>
+												<td>
+													{{ rowTable.comment }}
+												</td>
+												<td>
+													{{ rowTable.premia.percent }}%
+												</td>
+										</tr>
+								</template>
+							</tbody>
+						</table>
+
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="client-msg-cont">
-			<p id="err-sale-msg2" class="client-msg" style="color: red">Введите корректные данные</p>
-			<p id="err-order-msg2" class="client-msg" style="color: red">Согласитесь с политикой конфиденциальности и примите пользовательское соглашение</p>
-		</div>
+
+
+
 	</div>
-</div>
-<!--Modal for all pages end-->
+
+	<div id="my-footer">
+
+	</div>
+
+
+<!--Css from praweb start-->
+<link href="http://lk.praweb.ru/assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/nprogress/nprogress.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/animate.css/animate.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/build/css/custom.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/build/css/main.css" rel="stylesheet">
+<link rel="shortcut icon" href="http://lk.praweb.ru/assets/img/favicon.ico" type="image/x-icon">        <link href="http://lk.praweb.ru/assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<!--link href="http://lk.praweb.ru/assets/vue/datetimepicker/bootstrap-datepicker3.min.css" rel="stylesheet"-->
+<link href="http://lk.praweb.ru/assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vue/multiselect/vue-multiselect.min.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+<link href="http://lk.praweb.ru/assets/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+
+	<!--Css from praweb end-->
+
 
 <!--For all pages START-->
+
 <link rel="stylesheet" href="css/main.min.css">
+
+<script src="http://lk.praweb.ru/assets/vendors/jquery/dist/jquery.min.js"></script>
+
 <script src="js/scripts.min.js"></script>
 <script src="js/common.js"></script>
+
+
+
+<!--scripts praWeb start-->
+	<!-- Bootstrap -->
+	<script src="http://lk.praweb.ru/assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!-- FastClick -->
+	<script src="http://lk.praweb.ru/assets/vendors/fastclick/lib/fastclick.js"></script>
+	<!-- NProgress -->
+	<script src="http://lk.praweb.ru/assets/vendors/nprogress/nprogress.js"></script>
+	<!-- iCheck -->
+	<script src="http://lk.praweb.ru/assets/vendors/iCheck/icheck.min.js"></script>
+	<!-- Datatables -->
+	<script src="http://lk.praweb.ru/assets/vue/multiselect/vue-multiselect.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/jszip/dist/jszip.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/pdfmake/build/pdfmake.min.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/pdfmake/build/vfs_fonts.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/moment/min/moment.min.js"></script>
+	<!--script src="http://lk.praweb.ru/assets/vue/datetimepicker/bootstrap-datepicker.min.js"></script-->
+	<script src="http://lk.praweb.ru/assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+	<script src="http://lk.praweb.ru/assets/vendors/pnotify/dist/pnotify.custom.min.js"></script>
+<!--scripts praWeb end-->
+
+	<script src="js/calcModel.js"></script>
+
+
 <!--For all pages END-->
 <!--For this pages START-->
 
@@ -205,29 +189,11 @@
 
 <script>
 	/*For this page START*/
-	MainSliderInit();
 	/*For this page END*/
 
 	/*For all pages START*/
 	$(function() {
-		$('input[type="tel"]').mask("+7 (999) 999-9999");
 
-		/*Открытие подменю на мобильной версии в шапке сайта*/
-		$('.headSubmOpen').on('click', function () {
-			if($(this).hasClass('active')){
-				$(this).removeClass('active');
-				$('.js-headSubm').slideUp();
-			}
-			else {
-				$(this).addClass('active');
-				$('.js-headSubm').slideDown();
-			}
-		});
-
-		$(window).resize(function () {
-//			$('.headSubmOpen').addClass('active');
-//			$('.js-headSubm').slideDown();
-		});
 
 	});
 	/*For all pages END*/
