@@ -401,7 +401,7 @@
       <workItem from="1518858266407" duration="126000" />
       <workItem from="1519033748561" duration="4028000" />
       <workItem from="1519057969082" duration="57000" />
-      <workItem from="1519108427945" duration="6489000" />
+      <workItem from="1519108427945" duration="6496000" />
     </task>
     <task id="LOCAL-00001" summary="layouts typeless">
       <created>1507611710743</created>
@@ -459,11 +459,18 @@
       <option name="project" value="LOCAL" />
       <updated>1519118771434</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="new class for tables">
+      <created>1519118782709</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1519118782709</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="352532000" />
+    <option name="totallyTimeSpent" value="352539000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-2409" y="-9" width="2418" height="1318" extended-state="6" />
