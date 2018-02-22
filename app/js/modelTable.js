@@ -49,7 +49,28 @@ var tableRow = function (name, price, additionPrice, sitePrice, priceParam, comm
     this.hours = typeof hours !== 'undefined' ? hours : 0;//Количество затраченного времени специалиста
     this.specialist = typeof specialist !== 'undefined' ? specialist : '';//Количество затраченного времени специалиста
 
+
     //for sites tables end
+};
+
+tableRow.prototype.mainSet = function(name, comment, price, premiaPerc) {
+    this.name = typeof name !== 'undefined' ? name : 'Разработка Сайт визитка на MODx';//наименование услуги
+    this.comment = typeof comment !== 'undefined' ? comment : '';//параметры для вычесления цены на услуги
+    this.price = typeof price !== 'undefined' ? price : 0;//стоимость услуги, вычисляется при помощи функциии
+    this.premia.percent = typeof premiaPerc !== 'undefined' ? premiaPerc : 20;//стоимость услуги, вычисляется при помощи функциии
+    return this;
+};
+tableRow.prototype.siteSet = function(name, hours, priceParam) {
+    this.name = typeof name !== 'undefined' ? name : '';//наименование услуги
+    this.hours = typeof hours !== 'undefined' ? hours : '';//Количество затраченного времени специалиста
+    this.priceParam = typeof priceParam !== 'undefined'
+        ? priceParam : {//параметры для вычесления цены на услуги
+        specialistArr:[//специалисты, задействованные в этой услуге
+            
+        ]
+    };
+    
+    return this;
 };
 
 var specialist = function (hours, specialist, koef) {
@@ -68,6 +89,8 @@ var tableProto = function (headersArr, rowValArr){
                             'Комментарий',
                             'Премия'
                         ];
-    this.rowValArr = typeof price !== 'undefined' ? rowValArr : [];//массив строк, один объект - одна строка, состоит из объектов tableRow
+    this.rowValArr = typeof rowValArr !== 'undefined' ? rowValArr : [];//массив строк, один объект - одна строка, состоит из объектов tableRow
+    this.itogo = 0;//итоговая стоимость, для таблиц с сайтами
+    this.itogoHours = 0;//итоговая стоимость, для таблиц с сайтами
 };
 

@@ -3,77 +3,6 @@
  */
 
 
-//Model for tables Start
-var tableRow = function (name, price, additionPrice, sitePrice, priceParam, comment, premia, tablesInner, hours, specialist) {
-    //Значения по умолчанию
-    this.name = typeof name !== 'undefined' ? name : 'Разработка Сайт визитка на MODx';//наименование услуги
-    this.price = typeof price !== 'undefined' ? price : 0;//стоимость услуги, вычисляется при помощи функциии
-    this.additionPrice = typeof additionPrice !== 'undefined' ? additionPrice : '';//фиксированная добавочная стоимость, например +100 рублей
-    this.priceSiteKey = typeof priceSiteKey !== 'undefined' ? priceSiteKey : '';//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
-    this.sitePrice = typeof sitePrice !== 'undefined' ? sitePrice : '';//для начала необходимо вычислить цену сайта
-    this.priceParam = typeof priceParam !== 'undefined'
-        ? priceParam : {//параметры для вычесления цены на услуги
-        specialistArr:[//специалисты, задействованные в этой услуге
-            //specialist object array
-        ]
-    };
-
-    this.comment = typeof comment !== 'undefined' ? comment : '';//параметры для вычесления цены на услуги
-
-    this.premia = typeof premia !== 'undefined'
-        ? premia : {//премия для продажника
-        percent: 20, //Премия в процентах,
-        premiaFixed: 0, //Фиксированная премия
-        additional: 0 //Добавочная премия
-    };
-    //for sites tables start
-    this.tablesInner = typeof tablesInner !== 'undefined'
-        ? tablesInner : {//таблицы из которых высчитывается общая стоимость сайта
-        designTable1: {//Объекты дизайна, прототип
-            //tableProto
-        },
-        designTable2: {//Объекты дизайна, дизайн
-            //tableProto
-        },
-        programTable: {//Объекты программирования
-            //tableProto
-        },
-        additionalTable: {//Объекты Доп.Работ
-            //tableProto
-        },
-        layoutKoef: 1,//коэфициент для верстки, используется для вычисления количества часов адаптивной верстки всего проекта
-        dailyHours: 4//количество часов, выделяемое ежедневно на проект
-    };
-
-    this.hours = typeof hours !== 'undefined' ? hours : 0;//Количество затраченного времени специалиста
-    this.specialist = typeof specialist !== 'undefined' ? specialist : '';//Количество затраченного времени специалиста
-
-    //for sites tables end
-};
-
-var specialist = function (hours, specialist, koef) {
-    //Значения по умолчанию
-    this.hours = typeof hours !== 'undefined' ? hours : 0;//кол-во затраченных часов специалиста
-    this.specialist = typeof specialist !== 'undefined' ? specialist : 'accounter';//специалист, выполняющий работу, это ключ для выборки из specialistPrice
-    this.koef = typeof koef !== 'undefined' ? koef : 1;//коэфициент, на который умножаются часы, по умолчанию 1
-};
-
-
-var tableProto = function (headersArr, rowValArr){
-    this.headersArr = typeof headersArr !== 'undefined'
-        ? headersArr : [//шапка таблицы
-        'Информационные Продукты по Разработке',
-        'Стоимость',
-        'Комментарий',
-        'Премия'
-    ];
-    this.rowValArr = typeof price !== 'undefined' ? rowValArr : [];//массив строк, один объект - одна строка, состоит из объектов tableRow
-};
-//Model for tables End
-
-
-
-
 
 $(function() {
     var infoProdCalc = new Vue({
@@ -314,10 +243,31 @@ $(function() {
                                 additional: 0 //Добавочная премия
                             },
                             tablesInner: {
-                                designTable1: {},
-                                designTable2: {},
-                                programTable: {},
-                                additionalTable: {}
+                                //add rowValArr
+                                designTable1: new tableProto(['Объекты дизайна', 'Часы', 'Стоимость'],
+                                                            [new tableRow().siteSet('Прототипирование', 2, {specialistArr: [
+                                                                                                                new specialist(2, 'accounter', 1)
+                                                                                                            ]})
+                                                            ]),
+                                designTable2: new tableProto(['Объекты дизайна', 'Часы', 'Стоимость'],
+                                                            [new tableRow().siteSet('Главная страница', 6, {specialistArr: [
+                                                                                                                new specialist(6, 'designer', 1)
+                                                                                                            ]}),
+                                                            new tableRow().siteSet('Страница вывода ресурсов', 1, {specialistArr: [
+                                                                new specialist(1, 'designer', 1)
+                                                            ]}),
+                                                            new tableRow().siteSet('Типовая страница', 1, {specialistArr: [
+                                                                new specialist(1, 'designer', 1)
+                                                            ]}),
+                                    ]),
+                                programTable: new tableProto(['Объекты программирования', 'Часы', 'Стоимость'],
+                                    [new tableRow().siteSet('Адаптивная верстка всего проекта', 20.8, {specialistArr: [
+                                        new specialist(2, 'accounter', 1)
+                                    ]})
+                                    ]),
+                                additionalTable: {},
+                                layoutKoef: 2.6,//коэфициент для верстки, используется для вычисления количества часов адаптивной верстки всего проекта
+                                dailyHours: 4//количество часов, выделяемое ежедневно на проект
                             }
                         },
                         {
@@ -476,6 +426,19 @@ $(function() {
  
         },
         methods: {
+            calcTableSInner: function(tableInner, trTable){
+                var arrTr = tableInner.rowValArr, varthis = this;
+                arrTr.forEach(function(itemTr, i, arrTr) { // высчитываем цену для каждой строки
+                    var arrSpec = itemTr.priceParam.specialistArr;//Все специалисты, работающие над проектом
+                    arrSpec.forEach(function(itemSpec, i, arrSpec) {
+                        itemTr.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                        trTable.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                        tableInner.itogoHours += itemSpec.hours;
+                    });
+                });
+                tableInner.itogo += trTable.price;
+                return trTable;
+            },
             calcPrice: function () {
                 /*
                 * При вычислении учесть следующие особенности:
@@ -487,32 +450,46 @@ $(function() {
                 console.log('calcPrice run');
                 var varthis = this;
 
-                $.map( varthis.infoProdTableArr, function( trTable, i ) {
-                    console.log('trTable.headersArr', trTable.headersArr);
-
-
-                    $.map( trTable.rowValArr, function( tdTable, i ) {
-                        //console.log('tdTable', tdTable.price);
-
-                        if(tdTable.fixedPrice === false &&  tdTable.priceSiteKey === ''){
-
-                            var arr = tdTable.priceParam.specialistArr;
+                $.map( varthis.infoProdTableArr, function( singleTable, i ) {
+                    console.log('singleTable.headersArr', singleTable.headersArr);
+                    $.map( singleTable.rowValArr, function( trTable, i ) {
+                        //console.log('trTable', trTable.price);
+                        if(trTable.sitePrice === false &&  trTable.priceSiteKey === ''){
+                            var arr = trTable.priceParam.specialistArr;
                             arr.forEach(function(item, i, arr) { // если над проектом работают несколько специалистов
                                 console.log('specialist', item.specialist);
-                                tdTable.price += varthis.specialistPrice[item.specialist].price * item.hours;
+                                trTable.price += varthis.specialistPrice[item.specialist].price * item.hours;
                             });
-
-                            tdTable.price += tdTable.additionPrice;//добавочная стоимость
-
+                            trTable.price += trTable.additionPrice;//добавочная стоимость
                             //Доделать, с использованием priceSiteKey, проверить на таблице с сайтамми
+                        }
+
+                        if(trTable.sitePrice === true){
+                            /*Объекты дизайна - Прототипирование*/
+
+                            varthis.calcTableSInner(trTable.tablesInner.designTable1, trTable);//Расчет внутренних страниц
+                            varthis.calcTableSInner(trTable.tablesInner.designTable2, trTable);//
+
+                            //Расчет Объекты программирования
+                            //Расчет Объект работ
+
+
+                            // var arrTr = tableInner.rowValArr;
+                            // arrTr.forEach(function(itemTr, i, arrTr) { // высчитываем цену для каждой строки
+                            //     var arrSpec = itemTr.priceParam.specialistArr;//Все специалисты, работающие над проектом
+                            //     arrSpec.forEach(function(itemSpec, i, arrSpec) {
+                            //         itemTr.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                            //         trTable.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                            //         tableInner.itogoHours += itemSpec.hours;
+                            //     });
+                            // });
+                            // tableInner.itogo += trTable.price;
+                            /*Объекты дизайна  - Дизайн*/
+
 
 
 
                         }
-
-
-
-
                     });
 
                 });
@@ -525,10 +502,70 @@ $(function() {
 
         },
         mounted: function () {
+            var varthis = this;
+
+
+
             this.infoProdTableArr.table1.rowValArr[0].price = 123123;
             this.calcPrice();
 
-            var tr = new tableRow();
+
+
+
+            var infoProdTable = new tableProto();//создаём новую таблицу
+
+
+            var trObj = {
+                name:  'Консультационные услуги',//наименование услуги
+                price:  0,//стоимость услуги, вычисляется при помощи функциии
+                additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
+                priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
+                sitePrice: false, //для начала необходимо вычислить цену сайта
+                priceParam: {//параметры для вычесления цены на услуги (для)
+                    specialistArr:[//специалисты, задействованные в этой услуге
+                        {
+                            hours: 1,//кол-во затраченных часов специалиста
+                            specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
+                        }
+                    ]
+                },
+                comment: 'За 1 час консультирования клиента',
+                premia: {
+                    percent: 20, //Премия в процентах,
+                    premiaFixed: 0, //Фиксированная премия
+                    additional: 0 //Добавочная премия
+                }
+            };
+
+            var tr = new tableRow().mainSet('Консультационные услуги', 'За 1 час консультирования клиента'), trArray = [];
+
+
+
+            // trArray.push(tr);
+            // tr.mainSet('Консультационные услуги', 'За 1 час консультирования клиента');
+            // trArray.push(tr);
+            // tr.mainSet('Прототипирование сайта', 'От 4-х часов на комплект страниц для сайта визитки');
+            // trArray.push(tr);
+            // tr.mainSet('Разработка технического задания', 'На разработку хорошего ТЗ берем не менее 20 часов');
+            // trArray.push(tr);
+            // tr.mainSet('Регистрация доменных имен', 'До 10 доменов за эту цену, стоимость домена как на Reg.ru');
+            // trArray.push(tr);
+            // tr.mainSet('Настройка корпоративной почты на Yandex ', 'Работа с 1 доменом и настройка до 5 ящиков');
+            // trArray.push(tr);
+            // tr.mainSet('Установка SSL сертификата', 'Самостоятельно - только в связке хостинга TimeWeb и системмы MODx');
+            // trArray.push(tr);
+            // tr.mainSet('Подключение к системе Д.И.З.', 'Годовая оплата, услуга только для SEO проектов');
+            // trArray.push(tr);
+            // tr.mainSet('Подключение к системе Д.И.З.', 'Годовая оплата, услуга для всех');
+            // trArray.push(tr);
+            //
+            // console.log('trArray = ', trArray);
+
+
+
+
+
+
 
             console.log('tr = ', tr);
 
