@@ -42,8 +42,13 @@ var tableRow = function (name, price, additionPrice, sitePrice, priceParam, comm
         additionalTable: {//Объекты Доп.Работ
             //tableProto
         },
-        layoutKoef: 1,//коэфициент для верстки, используется для вычисления количества часов адаптивной верстки всего проекта
-        dailyHours: 4//количество часов, выделяемое ежедневно на проект
+        layoutKoef: 2.6,//коэфициент для верстки, используется для вычисления количества часов адаптивной верстки всего проекта
+        dailyHours: 4,//количество часов, выделяемое ежедневно на проект
+        itogoProject: {
+            itogoHours: 0,//Суммарное время за весь проект
+            itogoDays: 0,//Сумарное количество дней
+            itogoPrice: 0//Суммарная стоимость проекта
+        }
     };
 
     this.hours = typeof hours !== 'undefined' ? hours : 0;//Количество затраченного времени специалиста
@@ -73,11 +78,13 @@ tableRow.prototype.siteSet = function(name, hours, priceParam) {
     return this;
 };
 
-var specialist = function (hours, specialist, koef) {
+var specialist = function (hours, specialist, koef, price) {
     //Значения по умолчанию
     this.hours = typeof hours !== 'undefined' ? hours : 0;//кол-во затраченных часов специалиста
     this.specialist = typeof specialist !== 'undefined' ? specialist : 'accounter';//специалист, выполняющий работу, это ключ для выборки из specialistPrice
     this.koef = typeof koef !== 'undefined' ? koef : 1;//коэфициент, на который умножаются часы, по умолчанию 1
+    this.price = typeof price !== 'undefined' ? price : 1250;//коэфициент, на который умножаются часы, по умолчанию 1
+
 };
 
 

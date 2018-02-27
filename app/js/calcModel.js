@@ -5,34 +5,21 @@
 
 
 $(function() {
-    var infoProdCalc = new Vue({
+    var infoProdCalc;
+    infoProdCalc = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default,
         },
         el: '#infoProd',
         data: {
             specialistPrice: {
-                designer: { //дизайнер
-                    price: 1250//стоимость часа
-                },
-                developer: { // программист
-                    price: 1250//стоимость часа
-                },
-                seo:{ //сео
-                    price: 1050//стоимость часа
-                },
-                accounter:{ //акаунтер
-                    price: 1250//стоимость часа
-                },
-                seoDiz:{ //Подключение к системе Д.И.З. SEO
-                    price: 500//стоимость часа
-                },
-                allDiz:{ //Подключение к системе Д.И.З. для всех
-                    price: 900//стоимость часа
-                } ,
-                default:{ //Значение по умолчанию
-                    price: 1250//стоимость часа
-                }
+                designer: new specialist(0, 'designer', 1, 1250),
+                developer: new specialist(0, 'developer', 1, 1250),
+                seo: new specialist(0, 'seo', 1, 1250),
+                accounter: new specialist(0, 'accounter', 1, 1250),
+                seoDiz: new specialist(0, 'seoDiz', 1, 500),//Подключение к системе Д.И.З. для seo
+                allDiz: new specialist(0, 'allDiz', 1, 900),//Подключение к системе Д.И.З. для всех
+                default: new specialist(0, 'accounter', 1, 1250),//Значение по умолчанию
             },
             infoProdTableArr: {
                 table1: {//Один информационный продукт(таблица)
@@ -42,18 +29,19 @@ $(function() {
                         'Комментарий',
                         'Премия'
                     ],
-                    rowValArr:[//массив строк, один объект - одна строка
+                    rowValArr: [//массив строк, один объект - одна строка
                         {
-                            name:  'Консультационные услуги',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Консультационные услуги',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
-                                        hours: 1,//кол-во затраченных часов специалиста
-                                        specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
+                                        hours: 2,//кол-во затраченных часов специалиста
+                                        specialist: 'accounter',//специалист, выполняющий работу, это ключ для выборки из specialistPrice
+                                        koef: 1//коэфициент, на который умножаются часы, по умолчанию 1
                                     }
                                 ]
                             },
@@ -65,13 +53,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Прототипирование сайта',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Прототипирование сайта',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 4,//кол-во затраченных часов специалиста
                                         specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -86,13 +74,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Разработка технического задания',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Разработка технического задания',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 20,//кол-во затраченных часов специалиста
                                         specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -107,13 +95,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Регистрация доменных имен',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Регистрация доменных имен',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 2,//кол-во затраченных часов специалиста
                                         specialist: 'developer'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -128,13 +116,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Настройка корпоративной почты на Yandex',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Настройка корпоративной почты на Yandex',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 2,//кол-во затраченных часов специалиста
                                         specialist: 'developer'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -149,13 +137,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Установка SSL сертификата',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Установка SSL сертификата',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 2,//кол-во затраченных часов специалиста
                                         specialist: 'developer'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -170,13 +158,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Подключение к системе Д.И.З.',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Подключение к системе Д.И.З.',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 12,//кол-во затраченных часов специалиста
                                         specialist: 'seoDiz'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -191,13 +179,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Подключение к системе Д.И.З.',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Подключение к системе Д.И.З.',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 12,//кол-во затраченных часов специалиста
                                         specialist: 'allDiz'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -220,15 +208,15 @@ $(function() {
                         'Комментарий',
                         'Премия'
                     ],
-                    rowValArr:[//массив строк, один объект - одна строка
+                    rowValArr: [//массив строк, один объект - одна строка
                         {
-                            name:  'Разработка Сайт визитка на MODx',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Разработка Сайт визитка на MODx',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: true, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 0,//кол-во затраченных часов специалиста
                                         specialist: 'accounter',//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -245,39 +233,55 @@ $(function() {
                             tablesInner: {
                                 //add rowValArr
                                 designTable1: new tableProto(['Объекты дизайна', 'Часы', 'Стоимость'],
-                                                            [new tableRow().siteSet('Прототипирование', 2, {specialistArr: [
-                                                                                                                new specialist(2, 'accounter', 1)
-                                                                                                            ]})
-                                                            ]),
+                                    [new tableRow().siteSet('Прототипирование', 2, {
+                                        specialistArr: [
+                                            new specialist(2, 'accounter', 1)
+                                        ]
+                                    })
+                                    ]),
                                 designTable2: new tableProto(['Объекты дизайна', 'Часы', 'Стоимость'],
-                                                            [new tableRow().siteSet('Главная страница', 6, {specialistArr: [
-                                                                                                                new specialist(6, 'designer', 1)
-                                                                                                            ]}),
-                                                            new tableRow().siteSet('Страница вывода ресурсов', 1, {specialistArr: [
-                                                                new specialist(1, 'designer', 1)
-                                                            ]}),
-                                                            new tableRow().siteSet('Типовая страница', 1, {specialistArr: [
-                                                                new specialist(1, 'designer', 1)
-                                                            ]}),
+                                    [new tableRow().siteSet('Главная страница', 6, {
+                                        specialistArr: [
+                                            new specialist(6, 'designer', 1)
+                                        ]
+                                    }),
+                                        new tableRow().siteSet('Страница вывода ресурсов', 1, {
+                                            specialistArr: [
+                                                new specialist(1, 'designer', 1)
+                                            ]
+                                        }),
+                                        new tableRow().siteSet('Типовая страница', 1, {
+                                            specialistArr: [
+                                                new specialist(1, 'designer', 1)
+                                            ]
+                                        }),
                                     ]),
                                 programTable: new tableProto(['Объекты программирования', 'Часы', 'Стоимость'],
-                                    [new tableRow().siteSet('Адаптивная верстка всего проекта', 20.8, {specialistArr: [
-                                        new specialist(2, 'accounter', 1)
-                                    ]})
+                                    [new tableRow().siteSet('Адаптивная верстка всего проекта', 0)]),
+                                additionalTable: new tableProto(['Объекты Доп.Работ', 'Часы', 'Стоимость'],
+                                    [new tableRow().siteSet('Экваринг', 4, {
+                                        specialistArr: [
+                                            new specialist(4, 'developer', 1)
+                                        ]
+                                    })
                                     ]),
-                                additionalTable: {},
                                 layoutKoef: 2.6,//коэфициент для верстки, используется для вычисления количества часов адаптивной верстки всего проекта
-                                dailyHours: 4//количество часов, выделяемое ежедневно на проект
+                                dailyHours: 4,//количество часов, выделяемое ежедневно на проект
+                                itogoProject: {
+                                    itogoHours: 0,//Суммарное время за весь проект
+                                    itogoDays: 0,//Сумарное количество дней
+                                    itogoPrice: 0//Суммарная стоимость проекта
+                                }
                             }
                         },
                         {
-                            name:  'Прототипирование сайта',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Прототипирование сайта',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 4,//кол-во затраченных часов специалиста
                                         specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -292,13 +296,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Разработка технического задания',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Разработка технического задания',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 20,//кол-во затраченных часов специалиста
                                         specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -313,13 +317,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Регистрация доменных имен',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Регистрация доменных имен',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 2,//кол-во затраченных часов специалиста
                                         specialist: 'developer'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -334,13 +338,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Настройка корпоративной почты на Yandex',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Настройка корпоративной почты на Yandex',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 2,//кол-во затраченных часов специалиста
                                         specialist: 'developer'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -355,13 +359,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Установка SSL сертификата',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Установка SSL сертификата',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 2,//кол-во затраченных часов специалиста
                                         specialist: 'developer'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -376,13 +380,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Подключение к системе Д.И.З.',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Подключение к системе Д.И.З.',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 12,//кол-во затраченных часов специалиста
                                         specialist: 'seoDiz'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -397,13 +401,13 @@ $(function() {
                             }
                         },
                         {
-                            name:  'Подключение к системе Д.И.З.',//наименование услуги
-                            price:  0,//стоимость услуги, вычисляется при помощи функциии
+                            name: 'Подключение к системе Д.И.З.',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
                             sitePrice: false, //для начала необходимо вычислить цену сайта
                             priceParam: {//параметры для вычесления цены на услуги (для)
-                                specialistArr:[//специалисты, задействованные в этой услуге
+                                specialistArr: [//специалисты, задействованные в этой услуге
                                     {
                                         hours: 12,//кол-во затраченных часов специалиста
                                         specialist: 'allDiz'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
@@ -420,58 +424,96 @@ $(function() {
                     ]
                 },
             },
-            formTriggers:{//всё что выбрано в форме
+            formTriggers: {//всё что выбрано в форме
                 productSelect: '',// продукт для продажи
             },
- 
+
         },
         methods: {
-            calcTableSInner: function(tableInner, trTable){
+            calcTableSInner: function (tableInner, trTable, tableName) {//для вычисления цены тыблиц: Объекты дизайна(Прототип), Объекты дизайна(Дизайн)
                 var arrTr = tableInner.rowValArr, varthis = this;
-                arrTr.forEach(function(itemTr, i, arrTr) { // высчитываем цену для каждой строки
-                    var arrSpec = itemTr.priceParam.specialistArr;//Все специалисты, работающие над проектом
-                    arrSpec.forEach(function(itemSpec, i, arrSpec) {
-                        itemTr.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
-                        trTable.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
-                        tableInner.itogoHours += itemSpec.hours;
-                    });
+                arrTr.forEach(function (itemTr, i, arrTr) { // высчитываем цену для каждой строки
+                    if (tableName == 'programTable') {//таблица Объекты программирования
+                        itemTr.itogoHours = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours;//Вычисляем количество часов, "ыремя на дизайн" * коэфициент
+                        itemTr.itogo = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours * varthis.specialistPrice['developer'].price;
+
+                        tableInner.itogo = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours * varthis.specialistPrice['developer'].price;
+                        tableInner.itogoHours = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours;
+
+                    } else {
+                        var arrSpec = itemTr.priceParam.specialistArr;//Все специалисты, работающие над проектом
+                        arrSpec.forEach(function (itemSpec, i, arrSpec) {
+                            itemTr.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                            trTable.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                            tableInner.itogoHours += itemSpec.hours;
+                        });
+                        tableInner.itogo += trTable.price;
+                    }
                 });
-                tableInner.itogo += trTable.price;
                 return trTable;
+            },
+            calcItogo: function (singleTable) {//Вычисление итоговых значений для внутренних таблиц
+                $.map(singleTable.rowValArr, function (trTable, i) {
+                    if(trTable.sitePrice){//Значит есть внутренние таблицы  ии нам стоит посчитать итоговуб стоимость
+
+                        trTable.tablesInner.itogoProject.itogoHours = 0;
+                        trTable.tablesInner.itogoProject.itogoPrice = 0;
+
+                        $.map(trTable.tablesInner, function (innerTable, i) {
+                            if( typeof innerTable === "object" && innerTable.itogoDays === undefined){//если это object, значит это таблица... 2е условие для исключения объекта итого
+                                console.log('tableObject', innerTable);
+
+                                trTable.tablesInner.itogoProject.itogoHours += innerTable.itogoHours;
+                                trTable.tablesInner.itogoProject.itogoPrice += innerTable.itogo;
+
+                            }
+                         });
+                        trTable.tablesInner.itogoProject.itogoDays = trTable.tablesInner.itogoProject.itogoHours / trTable.tablesInner.dailyHours;
+                    }
+
+                });
+
+                //singleTable.tablesInner.itogoProject.itogoDays;
+
+                //singleTable.tablesInner.itogoProject.itogoPrice;
             },
             calcPrice: function () {
                 /*
-                * При вычислении учесть следующие особенности:
-                * 1) В rowValArr у объекта есть параметр priceSiteKey и fixedPrice.
-                * Начинать вычисление цены если fixedPrice === false and priceSiteKey === '' or priceSiteKey === undefined
-                * Если fixedPrice === true, то цена фиксирована и price не пересчитывается
-                * priceSiteKey === '' priceSiteKey !== undefined -> ерём цену по селектору, который указан в priceSiteKey
-                * */
+                 * При вычислении учесть следующие особенности:
+                 * 1) В rowValArr у объекта есть параметр priceSiteKey и fixedPrice.
+                 * Начинать вычисление цены если fixedPrice === false and priceSiteKey === '' or priceSiteKey === undefined
+                 * Если fixedPrice === true, то цена фиксирована и price не пересчитывается
+                 * priceSiteKey === '' priceSiteKey !== undefined -> ерём цену по селектору, который указан в priceSiteKey
+                 * */
                 console.log('calcPrice run');
                 var varthis = this;
 
-                $.map( varthis.infoProdTableArr, function( singleTable, i ) {
+                $.map(varthis.infoProdTableArr, function (singleTable, i) {
                     console.log('singleTable.headersArr', singleTable.headersArr);
-                    $.map( singleTable.rowValArr, function( trTable, i ) {
+                    $.map(singleTable.rowValArr, function (trTable, i) {
                         //console.log('trTable', trTable.price);
-                        if(trTable.sitePrice === false &&  trTable.priceSiteKey === ''){
+                        if (trTable.sitePrice === false && trTable.priceSiteKey === '') {
                             var arr = trTable.priceParam.specialistArr;
-                            arr.forEach(function(item, i, arr) { // если над проектом работают несколько специалистов
-                                console.log('specialist', item.specialist);
+                            arr.forEach(function (item, i, arr) { // если над проектом работают несколько специалистов
+                                // console.log('specialist', item.specialist);
                                 trTable.price += varthis.specialistPrice[item.specialist].price * item.hours;
                             });
                             trTable.price += trTable.additionPrice;//добавочная стоимость
                             //Доделать, с использованием priceSiteKey, проверить на таблице с сайтамми
                         }
 
-                        if(trTable.sitePrice === true){
-                            /*Объекты дизайна - Прототипирование*/
+                        if (trTable.sitePrice === true) {
+                            /*Расчет внутренних страниц*/
+                            varthis.calcTableSInner(trTable.tablesInner.designTable1, trTable);//Объекты дизайна - Прототипирование
+                            varthis.calcTableSInner(trTable.tablesInner.designTable2, trTable);//Объекты дизайна - Дизайнер
+                            varthis.calcTableSInner(trTable.tablesInner.programTable, trTable, 'programTable');//Объекты программирования
+                            varthis.calcTableSInner(trTable.tablesInner.additionalTable, trTable);//Объекты дизайна - Дизайнер
 
-                            varthis.calcTableSInner(trTable.tablesInner.designTable1, trTable);//Расчет внутренних страниц
-                            varthis.calcTableSInner(trTable.tablesInner.designTable2, trTable);//
 
-                            //Расчет Объекты программирования
                             //Расчет Объект работ
+
+
+                            //Расчёт итоговых показателей за проект
 
 
                             // var arrTr = tableInner.rowValArr;
@@ -487,87 +529,23 @@ $(function() {
                             /*Объекты дизайна  - Дизайн*/
 
 
-
-
                         }
                     });
+
+                    varthis.calcItogo(singleTable);
+
+
 
                 });
 
 
-
             },
         },
-        watch: {
-
-        },
+        watch: {},
         mounted: function () {
             var varthis = this;
-
-
-
-            this.infoProdTableArr.table1.rowValArr[0].price = 123123;
-            this.calcPrice();
-
-
-
-
-            var infoProdTable = new tableProto();//создаём новую таблицу
-
-
-            var trObj = {
-                name:  'Консультационные услуги',//наименование услуги
-                price:  0,//стоимость услуги, вычисляется при помощи функциии
-                additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
-                priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
-                sitePrice: false, //для начала необходимо вычислить цену сайта
-                priceParam: {//параметры для вычесления цены на услуги (для)
-                    specialistArr:[//специалисты, задействованные в этой услуге
-                        {
-                            hours: 1,//кол-во затраченных часов специалиста
-                            specialist: 'accounter'//специалист, выполняющий работу, это ключ для выборки из specialistPrice
-                        }
-                    ]
-                },
-                comment: 'За 1 час консультирования клиента',
-                premia: {
-                    percent: 20, //Премия в процентах,
-                    premiaFixed: 0, //Фиксированная премия
-                    additional: 0 //Добавочная премия
-                }
-            };
-
-            var tr = new tableRow().mainSet('Консультационные услуги', 'За 1 час консультирования клиента'), trArray = [];
-
-
-
-            // trArray.push(tr);
-            // tr.mainSet('Консультационные услуги', 'За 1 час консультирования клиента');
-            // trArray.push(tr);
-            // tr.mainSet('Прототипирование сайта', 'От 4-х часов на комплект страниц для сайта визитки');
-            // trArray.push(tr);
-            // tr.mainSet('Разработка технического задания', 'На разработку хорошего ТЗ берем не менее 20 часов');
-            // trArray.push(tr);
-            // tr.mainSet('Регистрация доменных имен', 'До 10 доменов за эту цену, стоимость домена как на Reg.ru');
-            // trArray.push(tr);
-            // tr.mainSet('Настройка корпоративной почты на Yandex ', 'Работа с 1 доменом и настройка до 5 ящиков');
-            // trArray.push(tr);
-            // tr.mainSet('Установка SSL сертификата', 'Самостоятельно - только в связке хостинга TimeWeb и системмы MODx');
-            // trArray.push(tr);
-            // tr.mainSet('Подключение к системе Д.И.З.', 'Годовая оплата, услуга только для SEO проектов');
-            // trArray.push(tr);
-            // tr.mainSet('Подключение к системе Д.И.З.', 'Годовая оплата, услуга для всех');
-            // trArray.push(tr);
-            //
-            // console.log('trArray = ', trArray);
-
-
-
-
-
-
-
-            console.log('tr = ', tr);
+            //this.infoProdTableArr.table1.rowValArr[0].price = 123123;
+            varthis.calcPrice();
 
         }
     });
