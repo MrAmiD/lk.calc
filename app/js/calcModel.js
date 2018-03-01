@@ -21,8 +21,9 @@ $(function() {
                 allDiz: new specialist(0, 'allDiz', 1, 900),//Подключение к системе Д.И.З. для всех
                 default: new specialist(0, 'accounter', 1, 1250),//Значение по умолчанию
             },
-            infoProdTableArr: {
-                table1: {//Один информационный продукт(таблица)
+            infoProdTableArr: [
+                {//Один информационный продукт(таблица)
+                    name: 'Информационные Продукты от IT-Эксперта',
                     headersArr: [
                         'Информационные Продукты от IT-Эксперта',
                         'Стоимость',
@@ -201,7 +202,8 @@ $(function() {
                         },
                     ]
                 },
-                table2: {//Один информационный продукт(таблица)
+                {//Один информационный продукт(таблица)
+                    name: 'Информационные Продукты по Разработке',
                     headersArr: [
                         'Информационные Продукты по Разработке',
                         'Стоимость',
@@ -211,6 +213,71 @@ $(function() {
                     rowValArr: [//массив строк, один объект - одна строка
                         {
                             name: 'Разработка Сайт визитка на MODx',//наименование услуги
+                            price: 0,//стоимость услуги, вычисляется при помощи функциии
+                            additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
+                            priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
+                            sitePrice: true, //для начала необходимо вычислить цену сайта
+                            priceParam: {//параметры для вычесления цены на услуги (для)
+                                specialistArr: [//специалисты, задействованные в этой услуге
+                                    {
+                                        hours: 0,//кол-во затраченных часов специалиста
+                                        specialist: 'accounter',//специалист, выполняющий работу, это ключ для выборки из specialistPrice
+                                        koef: 1//коэфициент, на который умножаются часы, по умолчанию 1
+                                    }
+                                ]
+                            },
+                            comment: 'По смете (пример, ask-perm.ru)',
+                            premia: {
+                                percent: 10, //Премия в процентах,
+                                premiaFixed: 0, //Фиксированная премия
+                                additional: 0 //Добавочная премия
+                            },
+                            tablesInner: {
+                                //add rowValArr
+                                designTable1: new tableProto(['Объекты дизайна', 'Часы', 'Стоимость'],
+                                    [new tableRow().siteSet('Прототипирование', 2, {
+                                        specialistArr: [
+                                            new specialist(2, 'accounter', 1)
+                                        ]
+                                    })
+                                    ]),
+                                designTable2: new tableProto(['Объекты дизайна', 'Часы', 'Стоимость'],
+                                    [new tableRow().siteSet('Главная страница', 6, {
+                                        specialistArr: [
+                                            new specialist(6, 'designer', 1)
+                                        ]
+                                    }),
+                                        new tableRow().siteSet('Страница вывода ресурсов', 1, {
+                                            specialistArr: [
+                                                new specialist(1, 'designer', 1)
+                                            ]
+                                        }),
+                                        new tableRow().siteSet('Типовая страница', 1, {
+                                            specialistArr: [
+                                                new specialist(1, 'designer', 1)
+                                            ]
+                                        }),
+                                    ]),
+                                programTable: new tableProto(['Объекты программирования', 'Часы', 'Стоимость'],
+                                    [new tableRow().siteSet('Адаптивная верстка всего проекта', 0)]),
+                                additionalTable: new tableProto(['Объекты Доп.Работ', 'Часы', 'Стоимость'],
+                                    [new tableRow().siteSet('Экваринг', 4, {
+                                        specialistArr: [
+                                            new specialist(4, 'developer', 1)
+                                        ]
+                                    })
+                                    ]),
+                                layoutKoef: 2.6,//коэфициент для верстки, используется для вычисления количества часов адаптивной верстки всего проекта
+                                dailyHours: 4,//количество часов, выделяемое ежедневно на проект
+                                itogoProject: {
+                                    itogoHours: 0,//Суммарное время за весь проект
+                                    itogoDays: 0,//Сумарное количество дней
+                                    itogoPrice: 0//Суммарная стоимость проекта
+                                }
+                            }
+                        },
+                        {
+                            name: 'Разработка LandingPage на MODx',//наименование услуги
                             price: 0,//стоимость услуги, вычисляется при помощи функциии
                             additionPrice: 0,//фиксированная добавочная стоимость, например +100 рублей
                             priceSiteKey: '',//ключ для услуги, цена которой уже вычеслена, например: siteCalc.landing.price .. используется в блоке Информационные Продукты по Разработке
@@ -422,20 +489,26 @@ $(function() {
                             }
                         },
                     ]
-                },
-            },
+                }
+            ],
             formTriggers: {//всё что выбрано в форме
-                productSelect: '',// продукт для продажи
+                productSelect: '',// продукт для продажи 
             },
 
         },
         methods: {
+            customLabel: function (option) {
+                return '${option.library} - ${option.language}';
+            },
             calcTableSInner: function (tableInner, trTable, tableName) {//для вычисления цены тыблиц: Объекты дизайна(Прототип), Объекты дизайна(Дизайн)
                 var arrTr = tableInner.rowValArr, varthis = this;
                 arrTr.forEach(function (itemTr, i, arrTr) { // высчитываем цену для каждой строки
                     if (tableName == 'programTable') {//таблица Объекты программирования
                         itemTr.itogoHours = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours;//Вычисляем количество часов, "ыремя на дизайн" * коэфициент
                         itemTr.itogo = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours * varthis.specialistPrice['developer'].price;
+
+                        itemTr.hours = itemTr.itogoHours;
+                        itemTr.price = itemTr.itogo;
 
                         tableInner.itogo = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours * varthis.specialistPrice['developer'].price;
                         tableInner.itogoHours = trTable.tablesInner.layoutKoef * trTable.tablesInner.designTable2.itogoHours;
@@ -444,10 +517,10 @@ $(function() {
                         var arrSpec = itemTr.priceParam.specialistArr;//Все специалисты, работающие над проектом
                         arrSpec.forEach(function (itemSpec, i, arrSpec) {
                             itemTr.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
-                            trTable.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
+                            //trTable.price += varthis.specialistPrice[itemSpec.specialist].price * itemSpec.hours;
                             tableInner.itogoHours += itemSpec.hours;
                         });
-                        tableInner.itogo += trTable.price;
+                        tableInner.itogo += itemTr.price;
                     }
                 });
                 return trTable;
@@ -469,6 +542,7 @@ $(function() {
                             }
                          });
                         trTable.tablesInner.itogoProject.itogoDays = trTable.tablesInner.itogoProject.itogoHours / trTable.tablesInner.dailyHours;
+                        trTable.price = trTable.tablesInner.itogoProject.itogoPrice;
                     }
 
                 });

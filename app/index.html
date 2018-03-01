@@ -54,48 +54,300 @@
 					<div class="h1">
 						Калькулятор стоимости
 					</div>
-					<!--<multiselect v-model="formTriggers.productSelect" Placeholder="Выберите продукт" Select-Label="Нажмите для выбора" Deselect-Label="Нажмите для удаления"   Selected-Label="Выбран" label="name" :multiple="true" :options="infoProdTableArr.table1.headersArr"></multiselect>-->
+
+					<multiselect v-model="formTriggers.productSelect" Placeholder="Выберите продукт" Select-Label="Нажмите для выбора" Deselect-Label="Нажмите для удаления" track-by="name"  Selected-Label="Выбран" label='name' :multiple="true" :options="infoProdTableArr"></multiselect>
 
 					<button type="button" class="btn btn-success">Показать</button>
 
 				</div>
 			</div>
+
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="h2">
+						Информационные продукты из селекта
+					</div>
+				</div>
+			</div>
+
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="table">
-						<table id="datatable-responsive" cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
-							<thead>
+						<template v-for="(singleTable, index) in formTriggers.productSelect">
+
+							<div class="h3">
+								{{singleTable.name}}
+							</div>
+
+							<table :id=index cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+								<thead>
 								<tr>
-									<template v-for="(item, index) in infoProdTableArr.table2.headersArr">
+									<template v-for="(thTable, index) in singleTable.headersArr">
 										<th>
-											{{ item }}
+											{{ thTable }}
 										</th>
 									</template>
 								</tr>
-							</thead>
-							<tbody>
-								<template v-for="(rowTable, index) in infoProdTableArr.table2.rowValArr">
+								</thead>
+								<tbody>
+								<template v-for="(rowTable, index) in singleTable.rowValArr">
+									<tr>
+										<td>
+											{{ rowTable.name }}
+										</td>
+										<td>
+											{{ rowTable.price }}
+										</td>
+										<td>
+											{{ rowTable.comment }}
+										</td>
+										<td>
+											{{ rowTable.premia.percent }}%
+										</td>
+									</tr>
+								</template>
+								</tbody>
+							</table>
+						</template>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="h2">
+						Информационные продукты
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table">
+						<template v-for="(singleTable, index) in infoProdTableArr">
+							<table :id=index cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+								<thead>
+									<tr>
+										<template v-for="(thTable, index) in singleTable.headersArr">
+											<th>
+												{{ thTable }}
+											</th>
+										</template>
+									</tr>
+								</thead>
+								<tbody>
+									<template v-for="(rowTable, index) in singleTable.rowValArr">
 										<tr>
+											<td>
+												{{ rowTable.name }}
+											</td>
+											<td>
+												{{ rowTable.price }}
+											</td>
+											<td>
+												{{ rowTable.comment }}
+											</td>
+											<td>
+												{{ rowTable.premia.percent }}%
+											</td>
+										</tr>
+									</template>
+								</tbody>
+							</table>
+						</template>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="h2">
+						Информационные продукты по разработке
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table">
+						<template v-for="(singleTable, mainTableIndex) in infoProdTableArr">
+							<template v-for="(trTable, index) in singleTable.rowValArr">
+								<template v-if="trTable.sitePrice == true">
+									<div class="row">
+										<div class="col-xs-12">
+											<div class="h3">
+ 												{{trTable.name}}
+											</div>
+										</div>
+									</div>
+									<table :id=mainTableIndex+index cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+											<thead>
+												<tr>
+													<template v-for="(thTable, index) in trTable.tablesInner.designTable1.headersArr">
+														<th>
+															{{ thTable }}
+														</th>
+													</template>
+												</tr>
+											</thead>
+											<tbody>
+												<template v-for="(rowTable, index) in trTable.tablesInner.designTable1.rowValArr">
+													<tr>
+														<td>
+															{{ rowTable.name }}
+														</td>
+														<td>
+															{{ rowTable.hours }}
+														</td>
+														<td>
+															{{ rowTable.price }}
+														</td>
+													</tr>
+												</template>
+												<tr>
+													<td>
+														<b style="font-weight: 900;">Итого</b>
+													</td>
+													<td>
+														{{ trTable.tablesInner.designTable1.itogoHours }}
+													</td>
+													<td>
+														{{ trTable.tablesInner.designTable1.itogo }}
+													</td>
+												</tr>
+											</tbody>
+									</table>
+
+									<table :id=mainTableIndex+index cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+										<thead>
+										<tr>
+											<template v-for="(thTable, index) in trTable.tablesInner.designTable2.headersArr">
+												<th>
+													{{ thTable }}
+												</th>
+											</template>
+										</tr>
+										</thead>
+										<tbody>
+											<template v-for="(rowTable, index) in trTable.tablesInner.designTable2.rowValArr">
+												<tr>
+													<td>
+														{{ rowTable.name }}
+													</td>
+													<td>
+														{{ rowTable.hours }}
+													</td>
+													<td>
+														{{ rowTable.price }}
+													</td>
+												</tr>
+											</template>
+											<tr>
+												<td>
+													<b style="font-weight: 900;">Итого</b>
+												</td>
+												<td>
+													{{ trTable.tablesInner.designTable2.itogoHours }}
+												</td>
+												<td>
+													{{ trTable.tablesInner.designTable2.itogo }}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+									<table :id=mainTableIndex+index cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+										<thead>
+										<tr>
+											<template v-for="(thTable, index) in trTable.tablesInner.programTable.headersArr">
+												<th>
+													{{ thTable }}
+												</th>
+											</template>
+										</tr>
+										</thead>
+										<tbody>
+										<template v-for="(rowTable, index) in trTable.tablesInner.programTable.rowValArr">
+											<tr>
 												<td>
 													{{ rowTable.name }}
 												</td>
 												<td>
+													{{ rowTable.hours }}
+												</td>
+												<td>
 													{{ rowTable.price }}
 												</td>
-												<td>
-													{{ rowTable.comment }}
-												</td>
-												<td>
-													{{ rowTable.premia.percent }}%
-												</td>
+											</tr>
+										</template>
+										<tr>
+											<td>
+												<b style="font-weight: 900;">Итого</b>
+											</td>
+											<td>
+												{{ trTable.tablesInner.programTable.itogoHours }}
+											</td>
+											<td>
+												{{ trTable.tablesInner.programTable.itogo }}
+											</td>
 										</tr>
-								</template>
-							</tbody>
-						</table>
+										</tbody>
+									</table>
 
+									<table :id=mainTableIndex+index cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap">
+										<thead>
+											<tr>
+												<template v-for="(thTable, index) in trTable.tablesInner.additionalTable.headersArr">
+													<th>
+														{{ thTable }}
+													</th>
+												</template>
+											</tr>
+										</thead>
+										<tbody>
+										<template v-for="(rowTable, index) in trTable.tablesInner.additionalTable.rowValArr">
+											<tr>
+												<td>
+													{{ rowTable.name }}
+												</td>
+												<td>
+													{{ rowTable.hours }}
+												</td>
+												<td>
+													{{ rowTable.price }}
+												</td>
+											</tr>
+										</template>
+										<tr>
+											<td>
+												<b style="font-weight: 900;">Итого</b>
+											</td>
+											<td>
+												{{ trTable.tablesInner.additionalTable.itogoHours }}
+											</td>
+											<td>
+												{{ trTable.tablesInner.additionalTable.itogo }}
+											</td>
+										</tr>
+										</tbody>
+									</table>
+
+
+								</template>
+							</template>
+
+
+
+
+						</template>
 					</div>
 				</div>
 			</div>
+
+
+
 		</div>
 
 
